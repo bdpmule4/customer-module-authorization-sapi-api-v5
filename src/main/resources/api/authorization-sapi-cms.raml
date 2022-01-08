@@ -1,0 +1,96 @@
+#%RAML 1.0
+title: authorization-sapi-cms
+description: this api will fetch the otp and verify the otp.
+
+traits:
+  common: !include exchange_modules/55389021-dfae-4fcf-9a55-56fdfc175501/customer-common-headrs-triats/1.0.4/common-header-triats.raml
+  client-enforcement: !include exchange_modules/55389021-dfae-4fcf-9a55-56fdfc175501/customer-common-headrs-triats/1.0.4/clientId-Enforcement-trait.raml
+
+types:
+  400-error-datatype: !include exchange_modules/55389021-dfae-4fcf-9a55-56fdfc175501/fargement-meber-details-datatypes/1.0.3/common-errors/400-error.raml
+  401-error-datatype: !include exchange_modules/55389021-dfae-4fcf-9a55-56fdfc175501/fargement-meber-details-datatypes/1.0.3/common-errors/401-error.raml
+  404-error-datatype: !include exchange_modules/55389021-dfae-4fcf-9a55-56fdfc175501/fargement-meber-details-datatypes/1.0.3/common-errors/404-error.raml
+  500-error-datatype: !include exchange_modules/55389021-dfae-4fcf-9a55-56fdfc175501/fargement-meber-details-datatypes/1.0.3/common-errors/500-error.raml
+  get-method: !include exchange_modules/55389021-dfae-4fcf-9a55-56fdfc175501/fargement-meber-details-datatypes/1.0.3/get-method-response.raml
+  post-method-request: !include exchange_modules/55389021-dfae-4fcf-9a55-56fdfc175501/fargement-meber-details-datatypes/1.0.3/post-method-request.raml
+  post-method-response: !include exchange_modules/55389021-dfae-4fcf-9a55-56fdfc175501/fargement-meber-details-datatypes/1.0.3/post-method-response.raml
+
+/members:
+  /{membersId}:
+    /otp:
+      get:
+        is:
+          - common
+          - client-enforcement
+        responses:
+          200:
+            body:
+              application/json:
+                type: get-method
+                example: !include examples/get-response-example.json
+          400:
+            body:
+              application/json:
+                type: 400-error-datatype
+                example: !include examples/400-error-example.json
+          401:
+            body:
+              application/json:
+                type: 401-error-datatype
+                example: !include examples/401-error-example.json
+          404:
+            body:
+              application/json:
+                type: 404-error-datatype
+                example: !include examples/404-error-example.json
+          500:
+            body:
+              application/json:
+                type: 500-error-datatype
+                example: !include examples/500-error-example.json
+  /otp:
+    post:
+      is:
+        - common
+        - client-enforcement
+      body:
+        application/json:
+          type: post-method-request
+          example: !include examples/post-request-example.json
+      responses:
+        200:
+          body:
+            application/json:
+              type: post-method-response
+              example: !include examples/post-response-example.json
+        400:
+          body:
+            application/json:
+              type: 400-error-datatype
+        401:
+          body:
+            application/json:
+              type: 401-error-datatype
+              example: !include examples/401-error-example.json
+        404:
+          body:
+            application/json:
+              type: 404-error-datatype
+              example: !include examples/404-error-example.json
+        500:
+          body:
+            application/json:
+              type: 500-error-datatype
+              example: !include examples/500-error-example.json
+                
+                
+                
+                
+
+            
+      
+                  
+                  
+                  
+                  
+                  

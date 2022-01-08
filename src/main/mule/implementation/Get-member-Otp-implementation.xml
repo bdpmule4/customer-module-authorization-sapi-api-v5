@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:os="http://www.mulesoft.org/schema/mule/os"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/current/mule-os.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<os:object-store name="Object_store" doc:name="Object store" doc:id="6819e8f5-0d08-41d4-95bc-26ed399bf9b4" maxEntries="10000" entryTtl="15" entryTtlUnit="MINUTES" expirationInterval="5" config-ref="ObjectStore_Config" />
+	<flow name="Get-member-Otp-implementationFlow" doc:id="53b94e1d-2246-42da-88d0-d0fbcf11e8ca" >
+		<os:retrieve doc:name="Retrieve" doc:id="6466ac71-f96f-4007-8627-49f255ddabc0" key="#[vars.'membersId']" objectStore="Object_store"/>
+		<ee:transform doc:name="Transform Message" doc:id="4138d665-5e2e-4146-b683-c9b3cc04d3c3" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+  "OTP":payload,
+  memberId: "12345"
+  
+  }]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>

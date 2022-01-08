@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd 
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+    <flow name="authorization-sapi-cms-main">
+        <http:listener config-ref="authorization-sapi-cms-httpListenerConfig" path="/api/*">
+            <http:response statusCode="#[vars.httpStatus default 200]">
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+            </http:response>
+            <http:error-response statusCode="#[vars.httpStatus default 500]">
+                <http:body>#[payload]</http:body>
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+            </http:error-response>
+        </http:listener>
+        <apikit:router config-ref="authorization-sapi-cms-config" />
+        <error-handler ref="errorError_Handler">
+            
+        </error-handler>
+    </flow>
+    <flow name="authorization-sapi-cms-console">
+        <http:listener config-ref="authorization-sapi-cms-httpListenerConfig" path="/console/*">
+            <http:response statusCode="#[vars.httpStatus default 200]">
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+            </http:response>
+            <http:error-response statusCode="#[vars.httpStatus default 500]">
+                <http:body>#[payload]</http:body>
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+            </http:error-response>
+        </http:listener>
+        <apikit:console config-ref="authorization-sapi-cms-config" />
+		<error-handler ref="errorError_Handler" />
+    </flow>
+	<flow name="get:\members\(membersId)\otp:authorization-sapi-cms-config">
+        <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core">
+            <ee:variables>
+                <ee:set-variable variableName="membersId">attributes.uriParams.'membersId'</ee:set-variable>
+            </ee:variables>
+        </ee:transform>
+		<logger level="INFO" doc:name="Request-logger-Logger" doc:id="e03126ef-70c6-42a5-b288-b67229032ccc" message='Request-Recived-for-Get-Otp-for-transactionId ::#[attributes.headers."x-cms-transactionid"]'/>
+		<flow-ref doc:name="Get-otp-Flow Reference" doc:id="a9ccfaf0-260e-4a33-ba0d-73c74b5ed793" name="Get-member-Otp-implementationFlow"/>
+		<logger level="INFO" doc:name="Request-sent-Logger" doc:id="81dcb89c-a8e0-4cb6-bb66-f373854447f9" message='Request-Sent-for-Get-Otp-for-transactionId ::#[attributes.headers."x-cms-transactionid"]'/>
+    </flow>
+    <flow name="post:\members\otp:application\json:authorization-sapi-cms-config">
+		<logger level="INFO" doc:name="Request-Recived-Logger" doc:id="bc9bbc23-bb41-42c3-864d-904b3682b60a" message='Request-Recived-for-Post-Otp-for-transactionId ::#[attributes.headers."x-cms-transactionid"]'/>
+		<flow-ref doc:name="Post-otp-Flow Reference" doc:id="31c1a9e4-6f9a-4156-a360-4c09ff762185" name="Post-member-OTP-implementationFlow"/>
+		<logger level="INFO" doc:name="Request-sent-Logger" doc:id="3f7916b4-97dc-4567-b3e8-d9a1b7f228ae" message='Request-Sent-for-Post-Otp-for-transactionId ::#[attributes.headers."x-cms-transactionid"]'/>
+    </flow>
+</mule>

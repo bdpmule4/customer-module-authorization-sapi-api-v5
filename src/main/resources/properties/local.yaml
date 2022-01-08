@@ -1,0 +1,9 @@
+http:
+ listner:
+  host: "localhost"
+  port: "8082"
+  
+smsapi:
+ host: "api.authkey.io"
+ uri: "/request"
+ sid: "2877"
